@@ -171,13 +171,18 @@ data:
     worker_container_image_pull_policy = IfNotPresent
     delete_worker_pods = True
     worker_service_account_name = 
+    {{ if .Cluster.Spec.DAGs }}
+    {{ if .Cluster.Spec.DAGs.Git }}
     git_repo = {{.Cluster.Spec.DAGs.Git.Repo}}
     git_branch = {{.Cluster.Spec.DAGs.Git.Branch}}
     git_subpath = {{.Cluster.Spec.DAGs.DagSubdir}}
     git_dags_folder_mount_point = /usr/local/airflow/dags/
     git_sync_dest = gitdags
-    git_user =
-    git_password =
+    {{ if .Cluster.Spec.DAGs.Git.CredSecretRef }}
+    git_user = {{.Cluster.Spec.DAGs.Git.User}}
+    {{ end }}
+    {{ end }}
+    {{ end }}
     in_cluster = True
     namespace = {{.Namespace}}
     gcp_service_account_keys = 
@@ -186,6 +191,15 @@ data:
     git_sync_container_repository = gcr.io/google-containers/git-sync-amd64
     git_sync_container_tag = v2.0.5
     git_sync_init_container_name = git-sync-clone
+
+    [kubernetes_secrets]
+    {{ if .Cluster.Spec.DAGs }}
+    {{ if .Cluster.Spec.DAGs.Git }}
+    {{ if .Cluster.Spec.DAGs.Git.CredSecretRef }}
+    AIRFLOW__KUBERNETES__GIT_PASSWORD = {{.Cluster.Spec.DAGs.Git.CredSecretRef.Name}}={{password}}
+    {{ end }}
+    {{ end }}
+    {{ end }}
 
     [kubernetes_node_selectors]
     # The Key-value pairs to be given to worker pods.

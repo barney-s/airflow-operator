@@ -209,9 +209,9 @@ func (r *AirflowCluster) getAirflowEnv(saName string, base *AirflowBase) []corev
 			}...)
 			if sp.DAGs.Git.CredSecretRef != nil {
 				env = append(env, []corev1.EnvVar{
-					{Name: "GIT_PASSWORD",
+					{Name: afk + "GIT_PASSWORD",
 						ValueFrom: envFromSecret(sp.DAGs.Git.CredSecretRef.Name, "password")},
-					{Name: "GIT_USER", Value: sp.DAGs.Git.User},
+					{Name: afk + "GIT_USER", Value: sp.DAGs.Git.User},
 				}...)
 			}
 		}
