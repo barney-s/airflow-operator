@@ -196,7 +196,7 @@ data:
     {{ if .Cluster.Spec.DAGs }}
     {{ if .Cluster.Spec.DAGs.Git }}
     {{ if .Cluster.Spec.DAGs.Git.CredSecretRef }}
-    AIRFLOW__KUBERNETES__GIT_PASSWORD = {{.Cluster.Spec.DAGs.Git.CredSecretRef.Name}}={{password}}
+    AIRFLOW__KUBERNETES__GIT_PASSWORD = {{.Cluster.Spec.DAGs.Git.CredSecretRef.Name}}=password
     {{ end }}
     {{ end }}
     {{ end }}
